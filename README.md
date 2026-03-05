@@ -41,19 +41,19 @@ Automatización basada en n8n para extraer, procesar y servir registros de votac
 git clone <repo-url> && cd VotacionesCongresistas
 ```
 
-2. Configura el entorno y los volúmenes
+1. Configura el entorno y los volúmenes
 
 - Coloca los PDFs de entrada en `documentos_entrada/` (el flujo espera archivos dentro de `/documentos` en el contenedor).
 - Agrega tu clave de ocr.space en la configuración del nodo del flujo (busca `TU_API_KEY` en `workflow/VotacionesCongresalesFeedBD.json`) o configúrala como credencial en n8n.
 - Configura las credenciales de Telegram y otras dentro de la UI de n8n o copia los archivos de credenciales en `n8n_storage` (en este repositorio hay nodos instalados en `n8n_storage/nodes/package.json`).
 
-3. Levanta los servicios
+1. Levanta los servicios
 
 ```bash
 docker compose up --build
 ```
 
-4. Aplica los permisos necesarios a la carpeta generada por n8n para evitar errores de escritura en Linux y reinicia el servicio.
+1. Aplica los permisos necesarios a la carpeta generada por n8n para evitar errores de escritura en Linux y reinicia el servicio.
 
 ```bash
 sudo chown -R 1000:1000 n8n_storage
@@ -68,14 +68,14 @@ El proyecto incluye un archivo SQL demostrativo con el registro de algunas votac
 cat backup_datos.sql | docker exec -i <nombre_del_contenedor_postgres> psql -U vcBot -d congreso_db
 ```
 
-### Servicios principales iniciados:
+### Servicios principales iniciados
 
 - `n8n` — servidor de automatizaciones (expuesto en el puerto 5678).
 - `postgres` — Postgres 15 para almacenar los datos de votaciones (puerto 5432).
 
 ## Uso básico
 
-- Abre la interfaz web de n8n en http://localhost:5678 para inspeccionar y activar los flujos.
+- Abre la interfaz web de n8n en <http://localhost:5678> para inspeccionar y activar los flujos.
 - Sube un PDF a `documentos_entrada/` y ejecuta el flujo `VotacionesCongresalesFeedBD` (revisa los nodos del flujo para los nombres/paths esperados).
 - Para interacción por chat, configura las credenciales del Trigger de Telegram en n8n, activa `VotacionesCongresistasChat` y chatea con el bot.
 
@@ -100,4 +100,4 @@ Para que ambos flujos funcionen correctamente, deberás configurar las siguiente
 - `docker-compose.yml` — definiciones de servicios para n8n y Postgres.
 - `dockerfile` — Dockerfile para construir la imagen n8n (instala ImageMagick y poppler).
 - `workflow/` — flujos exportados (`VotacionesCongresalesFeedBD.json`, `VotacionesCongresistasChat.json`).
-- `n8n_storage/` — almacenamiento runtime de n8n (credenciales, nodos instalados, sqlite DB local).
+
