@@ -1,0 +1,322 @@
+{
+  "name": "VotacionesCongresistasChat",
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2e022f11-fa72-4110-a866-ad5caa83880f",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "/start",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        240,
+        0
+      ],
+      "id": "22b9e777-35e4-49fa-9f64-6b58c408ceff",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "*"
+        ],
+        "timeout": 5
+      },
+      "type": "n8n-nodes-telegram-polling.telegramPollingTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "61af2309-b809-4e3d-bd59-506a907256cc",
+      "name": "Telegram Trigger",
+      "credentials": {
+        "telegramApi": {
+          "id": "v81gKCb4n24oVgBv",
+          "name": "VotacionesCongreso"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "¡Hola! Soy tu asistente de datos parlamentarios.  Aviso de precisión: Los datos que proveo son extraídos automáticamente de actas en PDF mediante OCR. Aunque el sistema tiene alta precisión, pueden existir discrepancias menores con los registros oficiales.  Puedes hacerme preguntas como:      ¿Cuáles son las últimas votaciones registradas?      ¿Se ha votado algo relacionado con \"cuidados paliativos\"?      ¿Cómo votó Alejandro Soto respecto al proyecto de AFP?  ¿En qué te puedo ayudar hoy?",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        512,
+        -96
+      ],
+      "id": "c331eb81-0bdb-45aa-a083-5bc2138f3585",
+      "name": "Send a text message",
+      "webhookId": "a0b0b134-68c3-4d52-b47d-d4c70616e682",
+      "credentials": {
+        "telegramApi": {
+          "id": "v81gKCb4n24oVgBv",
+          "name": "VotacionesCongreso"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "Eres un asistente de datos parlamentarios experto en SQL. Tu trabajo es responder a las preguntas de los usuarios consultando una base de datos PostgreSQL.\n\n- Tienes dos herramientas a tu disposicion: una base de datos PostgreSQL y un buscador de internet.\n- SIEMPRE usa primero la base de datos para verificar si la votacion o el proyecto de ley existe en nuestros registros y obtener el \"asunto\" exacto.\n- Si el usuario te pide explicar de que trata una ley o proyecto, o te pide contexto adicional que no esta en la base de datos, usa la herramienta de busqueda en internet. Busca usando el \"asunto\" o palabras clave de la ley.\n- Basa tu explicacion estrictamente en los resultados web obtenidos y cita tus fuentes si es posible. NUNCA inventes o alucines detalles, articulos o contextos. Si no encuentras informacion en internet, dile al usuario que no pudiste encontrar detalles adicionales.\n\nTienes acceso a las siguientes tablas:\n- Votaciones (columnas: id, fecha, hora, asunto, fecha_registro)\n- Detalle_votos (columnas: id, votacion_id, congresista, voto)\n\nReglas de consulta:\n- Cuando te pregunten por votaciones recientes, busca en la tabla votaciones ordenando por fecha_registro descendente y muestra un limite de 3 a 5 resultados.\n- Cuando te pregunten por temas especificos, busca coincidencias usando ILIKE en la columna asunto.\n- Cuando te pregunten por la decision de un congresista en particular, haz un JOIN entre ambas tablas usando votacion_id = votaciones.id y filtra por la columna congresista (usando ILIKE) y el tema en el asunto.\n- Nunca ejecutes comandos de borrado o modificacion (DELETE, UPDATE, DROP). Eres de solo lectura.\n\nREGLAS DE FORMATO Y SALIDA (OBLIGATORIAS):\n- Presenta la informacion de forma amable y concisa, pero ESTRICTAMENTE EN TEXTO PLANO.\n- TIENES PROHIBIDO usar formato Markdown.\n- NO uses asteriscos (*), NO uses guiones bajos (_), NO intentes hacer negritas ni cursivas.\n- Si necesitas hacer una lista, usa exclusivamente numeros (1. 2. 3.).\n- Si necesitas resaltar un texto o un ID, usa letras MAYUSCULAS o 'comillas simples'."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        448,
+        96
+      ],
+      "id": "52332361-3740-4175-9ea5-1bdde9e24fa6",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        448,
+        368
+      ],
+      "id": "c2619b35-3ba4-449e-b4c0-114d66ae0a90",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "mkqafFx8nOmKpasc",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.message.chat.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        560,
+        400
+      ],
+      "id": "6159f881-490b-498e-8813-c674210a4088",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "{{ $fromAI('sql_statement') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgresTool",
+      "typeVersion": 2.6,
+      "position": [
+        816,
+        336
+      ],
+      "id": "99533260-9dfe-47c0-8114-c3765ac3289c",
+      "name": "Execute a SQL query in Postgres",
+      "credentials": {
+        "postgres": {
+          "id": "XCOVeRBzNILwtGxD",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').last().json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1008,
+        96
+      ],
+      "id": "108d7a5e-b8ee-4869-b6c1-3ce4c0be1ac0",
+      "name": "Send a text message1",
+      "webhookId": "b90ce98a-3871-4d28-a91f-f7062665cd4b",
+      "credentials": {
+        "telegramApi": {
+          "id": "v81gKCb4n24oVgBv",
+          "name": "VotacionesCongreso"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        672,
+        336
+      ],
+      "id": "a2bc310c-ceb9-4cfe-b25d-f1545ef1ca19",
+      "name": "SerpAPI",
+      "credentials": {
+        "serpApi": {
+          "id": "eF4dLFanAiRyi5AX",
+          "name": "SerpAPI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "for (const item of $input.all()) {\n  if (item.json && item.json.output) {\n    let textoLimpio = item.json.output;\n    \n    textoLimpio = textoLimpio.replace(/\\*/g, '');\n    \n    textoLimpio = textoLimpio.replace(/_/g, '');\n    \n    textoLimpio = textoLimpio.replace(/#/g, '');\n    \n    item.json.output = textoLimpio;\n  }\n}\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        96
+      ],
+      "id": "7f33f82e-8d1c-4e83-b46e-78e79d79ae58",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query in Postgres": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "69b010df-9c9e-4c6f-8931-1f571ca1585e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7bd4d683fcc3c9bedc4ed914c4a4162c0f61ab5d7b81d63adb687795bcb43541"
+  },
+  "id": "kGQkESqixQ8Rl12h5j1ZL",
+  "tags": []
+}

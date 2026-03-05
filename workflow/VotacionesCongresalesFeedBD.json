@@ -1,0 +1,905 @@
+{
+  "name": "VotacionesCongresalesFeedBD",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -432,
+        0
+      ],
+      "id": "0170a351-59f7-4512-87ad-c7c6616537a1",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/documentos/info.png",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        0
+      ],
+      "id": "f3c17485-3231-4298-a0f8-f1e7deb025a3",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.ocr.space/parse/image",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "TU_API_KEY"
+            },
+            {
+              "name": "OCREngine",
+              "value": "2"
+            },
+            {
+              "name": "scale",
+              "value": "false"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "=data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        656,
+        0
+      ],
+      "id": "220d93b6-cd71-41e2-b3f3-01661765033c",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "command": "=pdftoppm -png /documentos/{{ $json.nombre_archivo }}.pdf /documentos/acta_temp"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        0
+      ],
+      "id": "738da7f6-22c1-428b-9fc5-88c47414cd71",
+      "name": "Execute Command"
+    },
+    {
+      "parameters": {
+        "command": "# Cortar la información\nmagick /documentos/acta_temp-1.png -crop 1134x163+41+100 /documentos/info.png"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        176,
+        0
+      ],
+      "id": "7ca1a6b8-6368-449b-96f5-2652d959656b",
+      "name": "Execute Command1"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/documentos/columna_0.png",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        1632,
+        224
+      ],
+      "id": "dbb39fe0-6e8f-4008-8622-6aa23951c651",
+      "name": "Read/Write Files from Disk1"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/documentos/columna_1.png",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        1632,
+        400
+      ],
+      "id": "ca99008a-c767-4cd6-ac69-80e3e2e43492",
+      "name": "Read/Write Files from Disk2"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/documentos/columna_2.png",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        1632,
+        576
+      ],
+      "id": "1d42d63b-99e4-47c6-9b46-104150af23c9",
+      "name": "Read/Write Files from Disk3"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.ocr.space/parse/image",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "TU_API_KEY"
+            },
+            {
+              "name": "OCREngine",
+              "value": "2"
+            },
+            {
+              "name": "scale",
+              "value": "false"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "=data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1888,
+        224
+      ],
+      "id": "d3a3ee5e-33c7-494c-8db0-bc45b7a337a2",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.ocr.space/parse/image",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "TU_API_KEY"
+            },
+            {
+              "name": "OCREngine",
+              "value": "2"
+            },
+            {
+              "name": "scale",
+              "value": "false"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "=data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1888,
+        400
+      ],
+      "id": "9c78f0b9-9760-430c-90e9-fa9df09fad60",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.ocr.space/parse/image",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "TU_API_KEY"
+            },
+            {
+              "name": "OCREngine",
+              "value": "2"
+            },
+            {
+              "name": "scale",
+              "value": "false"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "=data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1888,
+        576
+      ],
+      "id": "986bcd87-6621-48c4-9232-b9301b48a929",
+      "name": "HTTP Request3"
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2448,
+        384
+      ],
+      "id": "8c67dc7d-3b3a-4e6f-9b46-4d51a46e7d97",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nlet metadatos = {\n    fecha: \"NO_DETECTADA\",\n    hora: \"NO_DETECTADA\",\n    asunto: \"NO_DETECTADO\"\n};\n\nlet totalNombres = 0;\nlet totalVotos = 0;\nlet totalExitosos = 0;\nconst votosGlobales = [];\n\nitems.forEach(item => {\n    const data = item.json;\n\n    if (data.asunto || data.fecha) {\n        metadatos.fecha = data.fecha || metadatos.fecha;\n        metadatos.hora = data.hora || metadatos.hora;\n        metadatos.asunto = data.asunto || metadatos.asunto;\n    }\n\n    if (data.votos_estructurados && Array.isArray(data.votos_estructurados)) {\n        votosGlobales.push(...data.votos_estructurados);\n        \n        if (data.auditoria) {\n            totalNombres += data.auditoria.nombres_totales || data.auditoria.total_nombres_detectados || 0;\n            totalVotos += data.auditoria.votos_sueltos_leidos || data.auditoria.total_votos_detectados || 0;\n            totalExitosos += data.auditoria.registros_exitosos || 0;\n        }\n    }\n});\n\nreturn [{\n    json: {\n        informacion_votacion: metadatos,\n        auditoria_global: {\n            total_nombres_detectados: totalNombres,\n            total_votos_detectados: totalVotos,\n            registros_exitosos: totalExitosos\n        },\n        votos_estructurados_global: votosGlobales\n    }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2656,
+        416
+      ],
+      "id": "ccd32130-f9c0-4af4-b961-994fbe3d5b53",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "jsCode": "const lineasCrudas = $input.first().json.ParsedResults[0].TextOverlay.Lines;\n\nconst regexVoto = /^(SI|NO|ABST\\.?|AUS|LO|LE|LP|L25A|SUS|F|SIN\\s?RES|\\*{3,})$/i;\nconst regexSoloSimbolos = /^[\\+\\-\\s]+$/;\nconst regexPegado = /^(.*?)\\s+(SI|NO|ABST\\.?|AUS|LO|LE|LP|L25A|SUS|F|SIN\\s?RES|\\*{3,})$/i;\n\nlet umbralY = 999999; \n\nfor (let i = 0; i < lineasCrudas.length; i++) {\n    let texto = lineasCrudas[i].LineText.replace(/[\\+\\-]+/g, '').trim();\n    \n    if (regexVoto.test(texto) || regexPegado.test(texto)) {\n        if (lineasCrudas[i].MinTop < umbralY) {\n            umbralY = lineasCrudas[i].MinTop;\n        }\n    }\n}\n\numbralY = umbralY - 20;\n\nconst nombres = [];\nconst votosSincronizados = []; \nconst votosSueltos = [];\nlet lineasDescartadas = 0;\n\nlineasCrudas.forEach(lineaObj => {\n    if (lineaObj.MinTop < umbralY) {\n        lineasDescartadas++;\n        return;\n    }\n\n    let texto = lineaObj.LineText.replace(/[\\+\\-]+/g, '').trim();\n    \n    if (regexSoloSimbolos.test(texto)) return;\n    \n    const matchPegado = texto.match(regexPegado);\n    \n    if (matchPegado && matchPegado[1].trim().length > 3) {\n        nombres.push(matchPegado[1].trim());\n        let votoP = matchPegado[2].toUpperCase().replace(/\\s/g, '');\n        votosSincronizados.push(votoP.includes('***') ? \"ES PRESIDENTE\" : votoP);\n    } else {\n        const matchVoto = texto.match(regexVoto);\n        \n        if (matchVoto) {\n            let votoS = matchVoto[1].toUpperCase().replace(/\\s/g, '');\n            votosSueltos.push(votoS.includes('***') ? \"ES PRESIDENTE\" : votoS);\n        } else if (texto.length > 3) {\n            nombres.push(texto);\n            votosSincronizados.push(null);\n        }\n    }\n});\n\nlet indiceSuelto = 0;\nfor (let i = 0; i < votosSincronizados.length; i++) {\n    if (votosSincronizados[i] === null) {\n        if (indiceSuelto < votosSueltos.length) {\n            votosSincronizados[i] = votosSueltos[indiceSuelto];\n            indiceSuelto++;\n        } else {\n            votosSincronizados[i] = \"NO_DETECTADO\"; \n        }\n    }\n}\n\nconst resultados = [];\nfor (let i = 0; i < nombres.length; i++) {\n    resultados.push({\n        congresista: nombres[i],\n        voto: votosSincronizados[i]\n    });\n}\n\nreturn [{\n    json: {\n        auditoria: {\n            techo_geometrico_real: umbralY + 20,\n            margen_seguridad_aplicado: umbralY,\n            lineas_basura_descartadas: lineasDescartadas,\n            nombres_totales: nombres.length,\n            votos_sueltos_leidos: votosSueltos.length,\n            votos_pegados_leidos: votosSincronizados.filter(v => v !== null && v !== \"NO_DETECTADO\").length - votosSueltos.length,\n            registros_exitosos: resultados.length\n        },\n        votos_estructurados: resultados\n    }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2144,
+        224
+      ],
+      "id": "30e0642b-0f64-486d-94cf-6f3f43bf154a",
+      "name": "Code in JavaScript7"
+    },
+    {
+      "parameters": {
+        "jsCode": "const lineasCrudas = $input.first().json.ParsedResults[0].TextOverlay.Lines;\n\nconst regexVoto = /^(SI|NO|ABST\\.?|AUS|LO|LE|LP|L25A|SUS|F|SIN\\s?RES|\\*{3,})$/i;\nconst regexPegado = /^(.*?)\\s+(SI|NO|ABST\\.?|AUS|LO|LE|LP|L25A|SUS|F|SIN\\s?RES|\\*{3,})$/i;\n\nlet umbralY = 999999; \n\n// Encontrar el techo geometrico de los votos\nfor (let i = 0; i < lineasCrudas.length; i++) {\n    let texto = lineasCrudas[i].LineText.replace(/[\\+\\-]+/g, '').trim();\n    \n    if (regexVoto.test(texto) || regexPegado.test(texto)) {\n        if (lineasCrudas[i].MinTop < umbralY) {\n            umbralY = lineasCrudas[i].MinTop;\n        }\n    }\n}\n\n// Aplicamos el margen de seguridad hacia arriba\nif (umbralY !== 999999) {\n    umbralY = umbralY - 15;\n}\n\n// Reconstruir el texto de la cabecera ignorando lo que este debajo del umbral\nlet textoCabeceraLimpio = \"\";\nlineasCrudas.forEach(lineaObj => {\n    if (lineaObj.MinTop < umbralY) {\n        textoCabeceraLimpio += lineaObj.LineText + \"\\n\";\n    }\n});\n\n// Extraer los metadatos del texto limpio\nconst regexFecha = /Fecha:\\s*([\\d/]+)/i;\nconst regexHora = /Hora:\\s*([\\d:\\s]+[am|pm|AM|PM]*)/i;\nconst regexAsunto = /Asunto:\\s*([\\s\\S]*)/i;\n\nconst matchFecha = textoCabeceraLimpio.match(regexFecha);\nconst matchHora = textoCabeceraLimpio.match(regexHora);\nconst matchAsunto = textoCabeceraLimpio.match(regexAsunto);\n\nconst esVotacion = regexAsunto.test(textoCabeceraLimpio) || textoCabeceraLimpio.toLowerCase().includes(\"asunto\");\n\nconst fecha = matchFecha ? matchFecha[1].trim() : \"NO_DETECTADA\";\nconst hora = matchHora ? matchHora[1].trim() : \"NO_DETECTADA\";\n\nlet asunto = matchAsunto ? matchAsunto[1].trim() : \"NO_DETECTADO\";\nasunto = asunto.replace(/\\n/g, ' ').trim();\n\nreturn [{\n    json: {\n        es_votacion: esVotacion,\n        fecha: fecha,\n        hora: hora,\n        asunto: asunto\n    }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        912,
+        0
+      ],
+      "id": "49ede4d7-892e-4535-b6d1-00683dad71db",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "command": "# Cortar las columnas\nmagick /documentos/acta_temp-1.png -crop 325x1300+100+125 /documentos/columna_0.png\nmagick /documentos/acta_temp-1.png -crop 316x1300+475+125 /documentos/columna_1.png\nmagick /documentos/acta_temp-1.png -crop 325x1300+844+125 /documentos/columna_2.png"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1408,
+        -16
+      ],
+      "id": "ec7f9916-33dd-442e-a2f5-87fd30a2255c",
+      "name": "Execute Command2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e1259670-f6b2-4ac1-86c0-79aeda634f6e",
+              "leftValue": "={{ $json.es_votacion }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1120,
+        0
+      ],
+      "id": "8b9c861e-9462-4d60-9111-cae3e3a17751",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "votaciones",
+          "mode": "list",
+          "cachedResultName": "votaciones"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "fecha": "={{ $json.informacion_votacion.fecha }}",
+            "hora": "={{ $json.informacion_votacion.hora }}",
+            "asunto": "={{ $json.informacion_votacion.asunto }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "fecha",
+              "displayName": "fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hora",
+              "displayName": "hora",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "asunto",
+              "displayName": "asunto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "fecha_registro",
+              "displayName": "fecha_registro",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "outputColumns": [
+            "id"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        2880,
+        416
+      ],
+      "id": "0206f3a6-2954-42f5-b22f-45219426a569",
+      "name": "Insert rows in a table",
+      "credentials": {
+        "postgres": {
+          "id": "XCOVeRBzNILwtGxD",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const votacionId = $input.first().json.id;\n\nconst votos = $('Code in JavaScript').first().json.votos_estructurados_global;\n\nconst itemsInsertar = votos.map(registro => {\n    return {\n        json: {\n            votacion_id: votacionId,\n            congresista: registro.congresista,\n            voto: registro.voto\n        }\n    };\n});\n\nreturn itemsInsertar;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3088,
+        416
+      ],
+      "id": "431f252d-8790-4ec6-aaa1-2ddc0318e748",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "detalle_votos",
+          "mode": "list",
+          "cachedResultName": "detalle_votos"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "votacion_id": "={{ $json.votacion_id }}",
+            "congresista": "={{ $json.congresista }}",
+            "voto": "={{ $json.voto }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "votacion_id",
+              "displayName": "votacion_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "congresista",
+              "displayName": "congresista",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "voto",
+              "displayName": "voto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        3296,
+        416
+      ],
+      "id": "d721752b-4d3f-4846-a3fe-8f154bb58676",
+      "name": "Insert rows in a table1",
+      "credentials": {
+        "postgres": {
+          "id": "XCOVeRBzNILwtGxD",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f5c2d839-7afa-46c3-aae2-db73a2666b12",
+              "name": "nombre_archivo",
+              "value": "pagina_39",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -224,
+        0
+      ],
+      "id": "91bcf217-e3dd-487a-ac94-119ed7ee85a3",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "command": "rm /documentos/columna_0.png\nrm /documentos/columna_1.png\nrm /documentos/columna_2.png\nrm /documentos/info.png\nrm /documentos/acta_temp-1.png"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        3504,
+        416
+      ],
+      "id": "9c88ae3b-96bb-4df8-adde-80a7b230a05f",
+      "name": "Execute Command3"
+    },
+    {
+      "parameters": {
+        "jsCode": "const lineasCrudas = $input.first().json.ParsedResults[0].TextOverlay.Lines;\n\nconst regexVoto = /^(SI|NO|ABST\\.?|AUS|LO|LE|LP|L25A|SUS|F|SIN\\s?RES|\\*{3,})$/i;\nconst regexSoloSimbolos = /^[\\+\\-\\s]+$/;\nconst regexPegado = /^(.*?)\\s+(SI|NO|ABST\\.?|AUS|LO|LE|LP|L25A|SUS|F|SIN\\s?RES|\\*{3,})$/i;\n\nlet umbralY = 999999; \n\nfor (let i = 0; i < lineasCrudas.length; i++) {\n    let texto = lineasCrudas[i].LineText.replace(/[\\+\\-]+/g, '').trim();\n    \n    if (regexVoto.test(texto) || regexPegado.test(texto)) {\n        if (lineasCrudas[i].MinTop < umbralY) {\n            umbralY = lineasCrudas[i].MinTop;\n        }\n    }\n}\n\numbralY = umbralY - 20;\n\nconst nombres = [];\nconst votosSincronizados = []; \nconst votosSueltos = [];\nlet lineasDescartadas = 0;\n\nlineasCrudas.forEach(lineaObj => {\n    if (lineaObj.MinTop < umbralY) {\n        lineasDescartadas++;\n        return;\n    }\n\n    let texto = lineaObj.LineText.replace(/[\\+\\-]+/g, '').trim();\n    \n    if (regexSoloSimbolos.test(texto)) return;\n    \n    const matchPegado = texto.match(regexPegado);\n    \n    if (matchPegado && matchPegado[1].trim().length > 3) {\n        nombres.push(matchPegado[1].trim());\n        let votoP = matchPegado[2].toUpperCase().replace(/\\s/g, '');\n        votosSincronizados.push(votoP.includes('***') ? \"ES PRESIDENTE\" : votoP);\n    } else {\n        const matchVoto = texto.match(regexVoto);\n        \n        if (matchVoto) {\n            let votoS = matchVoto[1].toUpperCase().replace(/\\s/g, '');\n            votosSueltos.push(votoS.includes('***') ? \"ES PRESIDENTE\" : votoS);\n        } else if (texto.length > 3) {\n            nombres.push(texto);\n            votosSincronizados.push(null);\n        }\n    }\n});\n\nlet indiceSuelto = 0;\nfor (let i = 0; i < votosSincronizados.length; i++) {\n    if (votosSincronizados[i] === null) {\n        if (indiceSuelto < votosSueltos.length) {\n            votosSincronizados[i] = votosSueltos[indiceSuelto];\n            indiceSuelto++;\n        } else {\n            votosSincronizados[i] = \"NO_DETECTADO\"; \n        }\n    }\n}\n\nconst resultados = [];\nfor (let i = 0; i < nombres.length; i++) {\n    resultados.push({\n        congresista: nombres[i],\n        voto: votosSincronizados[i]\n    });\n}\n\nreturn [{\n    json: {\n        auditoria: {\n            techo_geometrico_real: umbralY + 20,\n            margen_seguridad_aplicado: umbralY,\n            lineas_basura_descartadas: lineasDescartadas,\n            nombres_totales: nombres.length,\n            votos_sueltos_leidos: votosSueltos.length,\n            votos_pegados_leidos: votosSincronizados.filter(v => v !== null && v !== \"NO_DETECTADO\").length - votosSueltos.length,\n            registros_exitosos: resultados.length\n        },\n        votos_estructurados: resultados\n    }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2144,
+        400
+      ],
+      "id": "f68c60c2-8230-4767-99dd-5c0332fb071d",
+      "name": "Code in JavaScript8"
+    },
+    {
+      "parameters": {
+        "jsCode": "const lineasCrudas = $input.first().json.ParsedResults[0].TextOverlay.Lines;\n\nconst regexVoto = /^(SI|NO|ABST\\.?|AUS|LO|LE|LP|L25A|SUS|F|SIN\\s?RES|\\*{3,})$/i;\nconst regexSoloSimbolos = /^[\\+\\-\\s]+$/;\nconst regexPegado = /^(.*?)\\s+(SI|NO|ABST\\.?|AUS|LO|LE|LP|L25A|SUS|F|SIN\\s?RES|\\*{3,})$/i;\n\nlet umbralY = 999999; \n\nfor (let i = 0; i < lineasCrudas.length; i++) {\n    let texto = lineasCrudas[i].LineText.replace(/[\\+\\-]+/g, '').trim();\n    \n    if (regexVoto.test(texto) || regexPegado.test(texto)) {\n        if (lineasCrudas[i].MinTop < umbralY) {\n            umbralY = lineasCrudas[i].MinTop;\n        }\n    }\n}\n\numbralY = umbralY - 20;\n\nconst nombres = [];\nconst votosSincronizados = []; \nconst votosSueltos = [];\nlet lineasDescartadas = 0;\n\nlineasCrudas.forEach(lineaObj => {\n    if (lineaObj.MinTop < umbralY) {\n        lineasDescartadas++;\n        return;\n    }\n\n    let texto = lineaObj.LineText.replace(/[\\+\\-]+/g, '').trim();\n    \n    if (regexSoloSimbolos.test(texto)) return;\n    \n    const matchPegado = texto.match(regexPegado);\n    \n    if (matchPegado && matchPegado[1].trim().length > 3) {\n        nombres.push(matchPegado[1].trim());\n        let votoP = matchPegado[2].toUpperCase().replace(/\\s/g, '');\n        votosSincronizados.push(votoP.includes('***') ? \"ES PRESIDENTE\" : votoP);\n    } else {\n        const matchVoto = texto.match(regexVoto);\n        \n        if (matchVoto) {\n            let votoS = matchVoto[1].toUpperCase().replace(/\\s/g, '');\n            votosSueltos.push(votoS.includes('***') ? \"ES PRESIDENTE\" : votoS);\n        } else if (texto.length > 3) {\n            nombres.push(texto);\n            votosSincronizados.push(null);\n        }\n    }\n});\n\nlet indiceSuelto = 0;\nfor (let i = 0; i < votosSincronizados.length; i++) {\n    if (votosSincronizados[i] === null) {\n        if (indiceSuelto < votosSueltos.length) {\n            votosSincronizados[i] = votosSueltos[indiceSuelto];\n            indiceSuelto++;\n        } else {\n            votosSincronizados[i] = \"NO_DETECTADO\"; \n        }\n    }\n}\n\nconst resultados = [];\nfor (let i = 0; i < nombres.length; i++) {\n    resultados.push({\n        congresista: nombres[i],\n        voto: votosSincronizados[i]\n    });\n}\n\nreturn [{\n    json: {\n        auditoria: {\n            techo_geometrico_real: umbralY + 20,\n            margen_seguridad_aplicado: umbralY,\n            lineas_basura_descartadas: lineasDescartadas,\n            nombres_totales: nombres.length,\n            votos_sueltos_leidos: votosSueltos.length,\n            votos_pegados_leidos: votosSincronizados.filter(v => v !== null && v !== \"NO_DETECTADO\").length - votosSueltos.length,\n            registros_exitosos: resultados.length\n        },\n        votos_estructurados: resultados\n    }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2144,
+        576
+      ],
+      "id": "aebd2a71-2d25-4af3-b5bc-bc851ed29bbb",
+      "name": "Code in JavaScript9"
+    },
+    {
+      "parameters": {
+        "command": "rm /documentos/info.png\nrm /documentos/acta_temp-1.png"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        192
+      ],
+      "id": "9abeb8be-f169-473d-b7e5-7149b58d9be3",
+      "name": "Execute Command4"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command": {
+      "main": [
+        [
+          {
+            "node": "Execute Command1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command1": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk3": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request3": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript7": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Execute Command2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute Command4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command2": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Read/Write Files from Disk2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Read/Write Files from Disk3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert rows in a table": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert rows in a table1": {
+      "main": [
+        [
+          {
+            "node": "Execute Command3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript8": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript9": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "3c3c7c6a-dde5-401c-b697-545b4bac009a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7bd4d683fcc3c9bedc4ed914c4a4162c0f61ab5d7b81d63adb687795bcb43541"
+  },
+  "id": "swQjptM9tR2HvUATW1EfY",
+  "tags": []
+}

@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  n8n:
+    build: .
+    container_name: n8n_bot_parlamentario
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - GENERIC_TIMEZONE=America/Lima
+      - TZ=America/Lima
+      - N8N_USER_ID=1000
+      - N8N_GROUP_ID=1000
+      - NODE_FUNCTION_ALLOW_BUILTIN=*
+      - NODE_FUNCTION_ALLOW_EXTERNAL=*
+      - N8N_RESTRICT_FILE_ACCESS_TO="/documentos"
+      - NODES_EXCLUDE="[]"
+    volumes:
+      - ./n8n_storage:/home/node/.n8n
+      - ./documentos_entrada:/documentos:rw
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: vcBot
+      POSTGRES_PASSWORD: vcBotPass
+      POSTGRES_DB: congreso_db
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  pg_data:
